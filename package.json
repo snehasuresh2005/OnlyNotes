@@ -1,0 +1,15 @@
+{
+  "name": "convo-ai-notes",
+  "version": "1.0.0",
+  "description": "Collaborative AI-powered Notes Workspace",
+  "scripts": {
+    "install:all": "cd server && npm install && cd ../client && npm install",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
