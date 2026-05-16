@@ -14,13 +14,13 @@ const db = new Database(join(__dirname, 'data', 'notes.db'));
 db.pragma('foreign_keys = ON');
 
 const USER_ID = 'USR_SEED_DEMO';
-const EMAIL = 'john@example.com';
+const EMAIL = 'seed-user@internal.local';
 
-// Check if user exists, reuse or create
+// Internal user for sample data only (not used for app login)
 let user = db.prepare('SELECT id FROM users WHERE email = ?').get(EMAIL);
 if (!user) {
-  const hash = bcrypt.hashSync('password123', 12);
-  db.prepare('INSERT INTO users (id, name, email, password_hash) VALUES (?,?,?,?)').run(USER_ID, 'John Doe', EMAIL, hash);
+  const hash = bcrypt.hashSync(nanoid(), 12);
+  db.prepare('INSERT INTO users (id, name, email, password_hash) VALUES (?,?,?,?)').run(USER_ID, 'Sample User', EMAIL, hash);
   user = { id: USER_ID };
 }
 const userId = user.id;

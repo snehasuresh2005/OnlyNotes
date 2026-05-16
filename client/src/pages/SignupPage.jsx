@@ -38,7 +38,7 @@ export default function SignupPage() {
           </div>
           <div className="form-group">
             <label>Email</label>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="john@example.com" required />
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@email.com" required />
           </div>
           <div className="form-group">
             <label>Password</label>

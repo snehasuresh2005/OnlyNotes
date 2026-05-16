@@ -92,13 +92,6 @@ A full-stack, AI-powered notes application built with **React** and **Express**.
    - **Frontend** → http://localhost:5173
    - **Backend** → http://localhost:3001
 
-### Demo Credentials
-If you ran the seed script:
-| Field    | Value              |
-| -------- | ------------------ |
-| Email    | `john@example.com` |
-| Password | `password123`      |
-
 ---
 
 ## 📁 Project Structure

@@ -41,7 +41,7 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// POST /api/auth/login
+// POST /api/auth/login — accepts any email/password; creates account if new
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -50,17 +50,19 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
-    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email.toLowerCase());
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid email or password' });
+    const normalizedEmail = email.toLowerCase().trim();
+    let row = db.prepare('SELECT * FROM users WHERE email = ?').get(normalizedEmail);
+
+    if (!row) {
+      const id = `USR_${nanoid(10)}`;
+      const name = normalizedEmail.split('@')[0] || 'User';
+      const password_hash = await bcrypt.hash(password, 12);
+      db.prepare('INSERT INTO users (id, name, email, password_hash) VALUES (?, ?, ?, ?)')
+        .run(id, name, normalizedEmail, password_hash);
+      row = { id, name, email: normalizedEmail };
     }
 
-    const validPassword = await bcrypt.compare(password, user.password_hash);
-    if (!validPassword) {
-      return res.status(401).json({ error: 'Invalid email or password' });
-    }
-
-    const userData = { id: user.id, name: user.name, email: user.email };
+    const userData = { id: row.id, name: row.name, email: row.email };
     const token = generateToken(userData);
 
     res.json({ user: userData, token });
