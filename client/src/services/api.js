@@ -1,4 +1,8 @@
-const API_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, '');
+const PRODUCTION_API = 'https://onlynotes-xeat.onrender.com';
+const API_URL = (
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? PRODUCTION_API : '')
+).replace(/\/$/, '');
 const API_BASE = API_URL ? `${API_URL}/api` : '/api';
 
 function getToken() {
@@ -19,12 +23,18 @@ async function request(url, options = {}) {
   const res = await fetch(`${API_BASE}${url}`, {
     ...options,
     headers,
+    credentials: 'include',
   });
 
-  const data = await res.json();
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error(res.ok ? 'Invalid server response' : `Request failed (${res.status})`);
+  }
 
   if (!res.ok) {
-    throw new Error(data.error || 'Request failed');
+    throw new Error(data.error || `Request failed (${res.status})`);
   }
 
   return data;

@@ -11,10 +11,10 @@ import { authMiddleware } from './middleware/auth.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
+// Middleware — reflect request origin so all Vercel preview/production URLs work
 app.use(cors({
-  origin: "https://only-notes-ten.vercel.app",
-  credentials: true
+  origin: true,
+  credentials: true,
 }));
 app.use(express.json({ limit: '5mb' }));
 
